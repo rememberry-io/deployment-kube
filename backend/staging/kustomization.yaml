@@ -1,3 +1,13 @@
 resources:
   - ./../base/
 namePrefix: staging-
+configMapGenerator:
+- name: configmap
+  behavior: merge
+  envs:
+  - application.properties
+secretGenerator:
+- name: secret
+  behavior: merge
+  envs:
+  - .secrets

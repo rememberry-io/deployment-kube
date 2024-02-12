@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts: 
+    - api.stage.rememberry.app
+    secretName: tls-staging-backend-ingress-api
+  rules:
+  - host: api.stage.rememberry.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service 
+            port:
+              name: api
+
+

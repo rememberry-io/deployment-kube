@@ -1,10 +1,24 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: 
-namePrefix: 
+namespace: rememberry
+namePrefix: rem-backend-
 resources:
-  -
+  - deployment.yaml
+  - ingress.yaml
+  - service.yaml
 labels:
 - includeSelectors: true
   pairs:
-    app: app
+    app: rememberry
+configMapGenerator:
+- name: configmap
+  envs:
+  - application.properties
+secretGenerator:
+- name: secret
+  envs:
+  - .secrets
+images:
+- name: "rem-backend-image"
+  newName: "notemann27/rememberry-backend"
+  newTag: "latest"
