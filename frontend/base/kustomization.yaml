@@ -14,3 +14,7 @@ configMapGenerator:
 - name: configmap
   envs:
   - application.properties
+images:
+- name: rem-frontend-image
+  newName: notemann27/rememberry-frontend
+  newTag: "latest"

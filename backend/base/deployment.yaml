@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: container
-          image: notemann27/rememberry-backend:latest
+          image: rem-backend-image
           imagePullPolicy: Always
           ports:
             - containerPort: 3050
