@@ -1,0 +1,50 @@
+# https://kubernetes.io/docs/concepts/workloads/pods/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: staging-migrate-db
+  namespace: rememberry
+  annotations:
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: "rem-staging-backend"
+    vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/staging-migration"
+    vault.hashicorp.com/tls-secret: "tls-server"
+    vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
+    vault.hashicorp.com/agent-inject-template-db-creds: |
+      {{- with secret "database/creds/staging-migration" -}}
+        export POSTGRES_USER="{{ .Data.username }}"
+        export PGPASSWORD="{{ .Data.password }}"
+      {{- end }}
+spec:
+  serviceAccountName: staging-rem-backend-service-acc
+  restartPolicy: Never
+  containers:
+  - name: container
+    image: "docker.io/bitnami/postgresql:16.2.0-debian-11-r1"
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      . /vault/secrets/db-creds && \
+      sh /tmp/scripts/kube-execute-sql.sh
+    volumeMounts:
+    - name: drizzle
+      mountPath: /tmp/drizzle
+    - name: scripts
+      mountPath: /tmp/scripts
+    env:
+    - name: DIRECTORY
+      value: "/tmp/drizzle"
+    - name: POSTGRES_DB
+      value: "remstaging"
+    - name: POSTGRES_HOST
+      value: "staging-rem-postgresql"
+  volumes:
+    - name: drizzle
+      configMap: 
+        name: drizzle-test
+    - name: scripts
+      configMap:
+        name: migration
+        items:
+          - key: kube-execute-sql.sh
+            path: kube-execute-sql.sh

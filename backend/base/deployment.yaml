@@ -60,19 +60,8 @@ spec:
                 configMapKeyRef:
                   name: configmap
                   key: WEB_PAGE_DOMAIN 
-            - name: POSTGRES_USER
+            - name: REDIS_PASSWORD 
               valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_PASSWORD
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
+                configMapKeyRef:
+                  name: configmap
                   key: REDIS_PASSWORD
-

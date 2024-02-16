@@ -6,6 +6,7 @@ resources:
 - deployment.yaml
 - ingress.yaml
 - service.yaml
+- service-acc.yaml
 labels:
 - includeSelectors: true
   pairs:
@@ -14,10 +15,6 @@ configMapGenerator:
 - envs:
   - application.properties
   name: configmap
-secretGenerator:
-- envs:
-  - .secrets
-  name: secret
 images:
 - name: rem-backend-image
   newName: notemann27/rememberry-backend

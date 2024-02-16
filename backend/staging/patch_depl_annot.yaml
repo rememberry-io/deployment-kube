@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  deployment
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "rem-staging-backend"
+        vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/rem-staging-role"
+        vault.hashicorp.com/tls-secret: "tls-server"
+        vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
+          # vault.hashicorp.com/ca-cert: "/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        vault.hashicorp.com/agent-inject-template-db-creds: |
+          {{- with secret "database/creds/rem-staging-role" -}}
+            export POSTGRES_USER="{{ .Data.username }}"
+            export POSTGRES_PASSWORD="{{ .Data.password }}"
+          {{- end }}
+    spec: 
+      serviceAccountName: staging-rem-backend-service-acc
+      containers:
+        - name: container
+          command: ["/bin/sh", "-c"]
+          args:
+          - |
+            source /vault/secrets/db-creds && \
+            bun ./dist/index.js
