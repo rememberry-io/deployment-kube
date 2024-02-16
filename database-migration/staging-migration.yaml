@@ -41,7 +41,7 @@ spec:
   volumes:
     - name: drizzle
       configMap: 
-        name: drizzle-test
+        name: drizzle
     - name: scripts
       configMap:
         name: migration
