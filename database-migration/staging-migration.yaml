@@ -25,7 +25,7 @@ spec:
     args:
     - |
       . /vault/secrets/db-creds && \
-      sh /tmp/scripts/kube-execute-sql.sh
+      sh /tmp/scripts/apply-migration.sh
     volumeMounts:
     - name: drizzle
       mountPath: /tmp/drizzle
@@ -46,5 +46,5 @@ spec:
       configMap:
         name: migration
         items:
-          - key: kube-execute-sql.sh
-            path: kube-execute-sql.sh
+          - key: apply-migration.sh
+            path: apply-migration.sh
