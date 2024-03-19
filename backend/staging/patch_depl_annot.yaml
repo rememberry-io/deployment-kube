@@ -11,18 +11,26 @@ spec:
         vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/rem-staging-role"
         vault.hashicorp.com/tls-secret: "tls-server"
         vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
-          # vault.hashicorp.com/ca-cert: "/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        vault.hashicorp.com/agent-run-as-same-user: "true"
+        vault.hashicorp.com/agent-cache-enable: true
         vault.hashicorp.com/agent-inject-template-db-creds: |
           {{- with secret "database/creds/rem-staging-role" -}}
-            export POSTGRES_USER="{{ .Data.username }}"
-            export POSTGRES_PASSWORD="{{ .Data.password }}"
+            export POSTGRES_USER={{ .Data.username }}
+            export POSTGRES_PASSWORD={{ .Data.password }}
           {{- end }}
+        vault.hashicorp.com/agent-inject-command-database.properties: |
+          kill -HUP $(pidof bun)
     spec: 
+      shareProcessNamespace: true
       serviceAccountName: staging-rem-backend-service-acc
       containers:
         - name: container
+          securityContext:
+             runAsUser: 1000
+             runAsGroup: 3000
           command: ["/bin/sh", "-c"]
           args:
           - |
-            source /vault/secrets/db-creds && \
+            cat /vault/secrets/db-creds && \
+            echo "POSTGRES_USER is $POSTGRES_USER" && \
             bun ./dist/index.js
