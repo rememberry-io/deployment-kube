@@ -87,3 +87,10 @@ vault write database/roles/rem-staging-role \
     default_ttl="32d" \
     max_ttl="32d"
 ```
+
+vault write database/roles/rem-staging-role \
+    db_name="remstaging" \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        ALTER ROLE \"{{name}}\" SUPERUSER;" \
+    default_ttl="3m" \
+    max_ttl="3m"

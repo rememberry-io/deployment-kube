@@ -12,11 +12,11 @@ spec:
         vault.hashicorp.com/tls-secret: "tls-server"
         vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
         vault.hashicorp.com/agent-run-as-same-user: "true"
-        vault.hashicorp.com/agent-cache-enable: true
+        vault.hashicorp.com/agent-cache-enable: "true"
         vault.hashicorp.com/agent-inject-template-db-creds: |
           {{- with secret "database/creds/rem-staging-role" -}}
-            export POSTGRES_USER={{ .Data.username }}
-            export POSTGRES_PASSWORD={{ .Data.password }}
+            POSTGRES_USER={{ .Data.username }}
+            POSTGRES_PASSWORD={{ .Data.password }}
           {{- end }}
         vault.hashicorp.com/agent-inject-command-database.properties: |
           kill -HUP $(pidof bun)
