@@ -18,8 +18,8 @@ spec:
             POSTGRES_USER={{ .Data.username }}
             POSTGRES_PASSWORD={{ .Data.password }}
           {{- end }}
-        vault.hashicorp.com/agent-inject-command-database.properties: |
-          kill -HUP $(pidof bun)
+        vault.hashicorp.com/agent-inject-command-db-creds: |
+          kill -SIGHUP $(pidof bun)
     spec: 
       shareProcessNamespace: true
       serviceAccountName: staging-rem-backend-service-acc
