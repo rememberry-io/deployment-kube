@@ -33,4 +33,4 @@ spec:
           - |
             cat /vault/secrets/db-creds && \
             echo "POSTGRES_USER is $POSTGRES_USER" && \
-            bun ./dist/index.js
+            node ./dist/index.js
