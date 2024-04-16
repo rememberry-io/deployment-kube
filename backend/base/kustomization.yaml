@@ -19,3 +19,7 @@ images:
 - name: rem-backend-image
   newName: notemann27/rememberry-backend
   newTag: "latest"
+secretGenerator:
+- name: secret
+  envs:
+  - .env

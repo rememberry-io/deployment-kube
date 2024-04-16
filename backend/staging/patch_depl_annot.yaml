@@ -31,6 +31,4 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
           - |
-            cat /vault/secrets/db-creds && \
-            echo "POSTGRES_USER is $POSTGRES_USER" && \
             node ./dist/index.js
